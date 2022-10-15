@@ -72,7 +72,7 @@
                 <p>Don't want to use our official GitHub repository? No Problem! You can change it to your own with a single command: <code class="yellow">scm config user &lt;your-name&gt;</code>.</p>
                 <p>Or, if you would rather install a program from pastebin, <code class="yellow">scm add testProgram@7ByR3NYn</code>.</p>
                 <p class="mt-2"><strong>Some of our scripts...</strong></p>
-                <div id="script-wrapper" class="scroll-x-snap row pt-05 pb-1 mb-1">
+                <div id="script-wrapper" class="custom-scrollbar scroll-x-snap row pt-05 pb-1 mb-1">
                 </div>
             </div>
         </div>
@@ -124,7 +124,14 @@
         async function getData () {
             // check localStorage first
             let localStorageData = localStorage.getItem('data')
-            if (localStorageData !== null && localStorageData !== 'null') return JSON.parse(localStorageData)
+            let localStorageUpdate = localStorage.getItem('update')
+
+            if (localStorageData !== null && localStorageData !== 'null'
+                && localStorageUpdate !== null && localStorageUpdate !== 'null'
+                && ((new Date() - new Date(localStorageUpdate)) / 1000 / 60 / 60 / 24) < 7)
+            {
+                return JSON.parse(localStorageData)
+            }
 
             // call github api to get info about our scripts
             let response = await fetch('https://api.github.com/orgs/mc-cc-scripts/repos?type=all&per_page=100&page=1')
@@ -139,6 +146,7 @@
                 cleanData[i].full_name = data[i].full_name
             }
             localStorage.setItem('data', JSON.stringify(cleanData))
+            localStorage.setItem('update', new Date())
 
             return cleanData
         }
