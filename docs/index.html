@@ -34,6 +34,33 @@
         #script-wrapper {
             max-width: 960px;
         }
+
+        .loader {
+            width: 48px;
+            height: 48px;
+            border: 5px solid #FFF;
+            border-bottom-color: transparent;
+            border-radius: 50%;
+            display: inline-block;
+            box-sizing: border-box;
+            animation: rotation 1s linear infinite;
+        }
+
+        @keyframes rotation {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+        
+        .loading {
+            min-height: 200px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
     </style>
 
     <title>SCM - Script Manager</title>
@@ -74,7 +101,8 @@
                 <p>Don't want to use our official GitHub repository? No Problem! You can change it to your own with a single command: <code class="yellow">scm config user &lt;your-name&gt;</code>.</p>
                 <p>Or, if you would rather install a program from pastebin, <code class="yellow">scm add testProgram@7ByR3NYn</code>.</p>
                 <p class="mt-2"><strong>Some of our scripts...</strong></p>
-                <div id="script-wrapper" class="custom-scrollbar scroll-x-snap row pt-05 pb-1 mb-1">
+                <div id="script-wrapper" class="custom-scrollbar scroll-x-snap row pt-05 pb-1 mb-1 loading">
+                    <div class="loader"></div>
                 </div>
             </div>
         </div>
@@ -103,6 +131,9 @@
         let template = document.querySelector('#script-template')
 
         function addCards (data) {
+            document.querySelector('.loader').remove()
+            document.querySelector('.loading').classList.remove('loading')
+
             let installScript = {}
             installScript['Library'] = 'require'
             installScript['Program'] = 'add'
